@@ -1,3 +1,6 @@
+import {test, expect} from "@playwright/test";
+
+
 test("successful login with correct credentials", async ({ page }) => {
   const url = "https://demo-bank.vercel.app/";
   const userId = "testerLO";
