@@ -1,26 +1,27 @@
 import { test, expect } from '@playwright/test';
 test.describe('Pulpit tests', () => {
   test.describe.configure({ retries: 3 });
-    test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page }) => {
     const url = 'https://demo-bank.vercel.app/';
+    const userId = 'testerLO';
+    const password = 'password';
+
     await page.goto(url);
+
+    await page.getByTestId('login-input').fill(userId);
+    await page.getByTestId('password-input').fill(password);
+    await page.getByTestId('login-button').click();
+    await page.waitForLoadState('domcontentloaded');
   });
   test('quick payment with correct data', async ({ page }) => {
     //Arrage
-    const userId = 'testerLO';
-    const password = 'password';
     const chooseList = '2';
     const price = '150';
     const tittle = 'pizza';
     const expectedMessage = `Przelew wykonany! Chuck Demobankowy - ${price},00PLN - ${tittle}`;
 
     //Act
-    await page.getByTestId('login-input').fill(userId);
-    await page.getByTestId('password-input').fill(password);
-    await page.getByTestId('login-button').click();
-    await page.waitForLoadState('domcontentloaded');
 
-    await page.waitForLoadState('domcontentloaded');
     await page.locator('#widget_1_transfer_receiver').selectOption(chooseList);
     await page.locator('#widget_1_transfer_amount').fill(price);
     await page.locator('#widget_1_transfer_title').fill(tittle);
@@ -33,14 +34,9 @@ test.describe('Pulpit tests', () => {
   });
 
   test('successful mobile top-up', async ({ page }) => {
-    const login = 'test2345';
-    const password = 'rtgerger';
     const phoneNumber = '503 xxx xxx';
     const price = '456';
 
-    await page.getByTestId('login-input').fill(login);
-    await page.getByTestId('password-input').fill(password);
-    await page.getByTestId('login-button').click();
     await page.locator('#widget_1_topup_receiver').selectOption(phoneNumber);
     await page.locator('#widget_1_topup_amount').fill(price);
     await page.locator('#uniform-widget_1_topup_agreement > span').click();
