@@ -1,9 +1,12 @@
 import { test, expect } from '@playwright/test';
 test.describe('Pulpit tests', () => {
   test.describe.configure({ retries: 3 });
+    test.beforeEach(async ({ page }) => {
+    const url = 'https://demo-bank.vercel.app/';
+    await page.goto(url);
+  });
   test('quick payment with correct data', async ({ page }) => {
     //Arrage
-    const url = 'https://demo-bank.vercel.app/';
     const userId = 'testerLO';
     const password = 'password';
     const chooseList = '2';
@@ -12,7 +15,6 @@ test.describe('Pulpit tests', () => {
     const expectedMessage = `Przelew wykonany! Chuck Demobankowy - ${price},00PLN - ${tittle}`;
 
     //Act
-    await page.goto(url);
     await page.getByTestId('login-input').fill(userId);
     await page.getByTestId('password-input').fill(password);
     await page.getByTestId('login-button').click();
@@ -36,7 +38,6 @@ test.describe('Pulpit tests', () => {
     const phoneNumber = '503 xxx xxx';
     const price = '456';
 
-    await page.goto('https://demo-bank.vercel.app/');
     await page.getByTestId('login-input').fill(login);
     await page.getByTestId('password-input').fill(password);
     await page.getByTestId('login-button').click();
