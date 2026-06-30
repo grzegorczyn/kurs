@@ -46,4 +46,19 @@ test.describe('Pulpit tests', () => {
       `Doładowanie wykonane! ${price},00PLN na numer ${phoneNumber}`,
     );
   });
+
+  
+  test.only('correct after successful mobile top-up', async ({ page }) => {
+    const phoneNumber = '503 xxx xxx';
+    const price = '456';
+
+    await page.locator('#widget_1_topup_receiver').selectOption(phoneNumber);
+    await page.locator('#widget_1_topup_amount').fill(price);
+    await page.locator('#uniform-widget_1_topup_agreement > span').click();
+    await page.getByRole('button', { name: 'doładuj telefon' }).click();
+    await page.getByTestId('close-button').click();
+    await expect(page.locator('#show_messages')).toHaveText(
+      `Doładowanie wykonane! ${price},00PLN na numer ${phoneNumber}`,
+    );
+  });
 });
