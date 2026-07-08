@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { loginData, userId } from '../test-data/login.data';
 test.describe('Pulpit tests', () => {
   test.describe.configure({ retries: 3 });
   test.beforeEach(async ({ page }) => {
     const url = 'https://demo-bank.vercel.app/';
-    const userId = 'testerLO';
-    const password = 'password';
+    const userId = loginData.userId;
+    const password = loginData.password;
 
     await page.goto(url);
 
@@ -47,7 +48,6 @@ test.describe('Pulpit tests', () => {
     );
   });
 
-  
   test.only('correct after successful mobile top-up', async ({ page }) => {
     const phoneNumber = '503 xxx xxx';
     const price = '456';
