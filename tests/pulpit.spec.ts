@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { loginData, userId } from '../test-data/login.data';
+import { LoginPage } from '../pages/login.page';
 test.describe('Pulpit tests', () => {
   test.describe.configure({ retries: 3 });
   test.beforeEach(async ({ page }) => {
@@ -9,9 +10,14 @@ test.describe('Pulpit tests', () => {
 
     await page.goto(url);
 
-    await page.getByTestId('login-input').fill(userId);
-    await page.getByTestId('password-input').fill(password);
-    await page.getByTestId('login-button').click();
+const loginPage = new LoginPage(page);
+    await loginPage.loginInput.fill(userId);
+    await loginPage.passwordInput.fill(password);
+    await loginPage.loginButton.click();
+
+    // await page.getByTestId('login-input').fill(userId);
+    // await page.getByTestId('password-input').fill(password);
+    // await page.getByTestId('login-button').click();
     await page.waitForLoadState('domcontentloaded');
   });
   test('quick payment with correct data', async ({ page }) => {
@@ -48,7 +54,7 @@ test.describe('Pulpit tests', () => {
     );
   });
 
-  test.only('correct after successful mobile top-up', async ({ page }) => {
+  test('correct after successful mobile top-up', async ({ page }) => {
     const phoneNumber = '503 xxx xxx';
     const price = '456';
 
