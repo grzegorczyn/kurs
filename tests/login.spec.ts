@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { loginData, userId } from '../test-data/login.data';
 import { LoginPage } from '../pages/login.page';
 
-test.only('successful login with correct credentials', async ({ page }) => {
+test('successful login with correct credentials', async ({ page }) => {
   //Arrange
 
   const userId = loginData.userId;
@@ -20,3 +20,5 @@ test.only('successful login with correct credentials', async ({ page }) => {
   //Assert
   await expect(page.getByTestId('user-name')).toHaveText(correctText);
 });
+
+
