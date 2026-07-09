@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { loginData, userId } from '../test-data/login.data';
+import { pulpitData } from '../test-data/pulpit.data';
 import { LoginPage } from '../pages/login.page';
+import { PulpitPage } from '../pages/pulpit.page';
+
 test.describe('Pulpit tests', () => {
   test.describe.configure({ retries: 3 });
   test.beforeEach(async ({ page }) => {
@@ -10,34 +13,32 @@ test.describe('Pulpit tests', () => {
 
     await page.goto(url);
 
-const loginPage = new LoginPage(page);
+    const loginPage = new LoginPage(page);
     await loginPage.loginInput.fill(userId);
     await loginPage.passwordInput.fill(password);
     await loginPage.loginButton.click();
 
-    // await page.getByTestId('login-input').fill(userId);
-    // await page.getByTestId('password-input').fill(password);
-    // await page.getByTestId('login-button').click();
     await page.waitForLoadState('domcontentloaded');
   });
-  test('quick payment with correct data', async ({ page }) => {
+
+  test.only('quick payment with correct data', async ({ page }) => {
     //Arrage
-    const chooseList = '2';
-    const price = '150';
-    const tittle = 'pizza';
-    const expectedMessage = `Przelew wykonany! Chuck Demobankowy - ${price},00PLN - ${tittle}`;
+    const price = pulpitData.price;
+    const title = pulpitData.tittle;
+    const chooseList = pulpitData.chooseList;
+    const message = pulpitData.expectedMessage;
 
     //Act
-
-    await page.locator('#widget_1_transfer_receiver').selectOption(chooseList);
-    await page.locator('#widget_1_transfer_amount').fill(price);
-    await page.locator('#widget_1_transfer_title').fill(tittle);
+    const pulpitPage = new PulpitPage(page);
+    await pulpitPage.ListValue.selectOption(chooseList);
+    await pulpitPage.priceValue.fill(price);
+    await pulpitPage.tittleValue.fill(title);
 
     await page.getByRole('button', { name: 'wykonaj' }).click();
     await page.getByTestId('close-button').click();
 
     //Assert
-    await expect(page.locator('#show_messages')).toHaveText(expectedMessage);
+    await expect(page.locator('#show_messages')).toHaveText(message);
   });
 
   test('successful mobile top-up', async ({ page }) => {
